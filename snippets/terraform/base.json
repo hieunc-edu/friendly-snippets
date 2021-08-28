@@ -1,0 +1,13 @@
+{
+    "varString": {
+        "prefix": "varString",
+        "body": [
+        "variable \"${1:name}\" {",
+	    "\tdescription = \"\"",
+	    "\ttype        = \"string\"",
+	    "\tdefault     = \"${2}\"",
+	    "}"
+        ]
+        "description": "variable with type : string"
+    },
+}
