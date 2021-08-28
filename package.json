@@ -155,6 +155,10 @@
         "path": "./snippets/javascript/typescript.json"
       },
       {
+        "language": "terraform",
+        "path": "./snippets/terraform/base.json"
+      },
+      {
         "language": "javascriptreact",
         "path": "./snippets/javascript/react.json"
       },
