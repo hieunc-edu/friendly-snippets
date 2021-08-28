@@ -7,7 +7,7 @@
 	    "\ttype        = \"string\"",
 	    "\tdefault     = \"${2}\"",
 	    "}"
-        ]
+        ],
         "description": "variable with type : string"
-    },
+    }
 }
