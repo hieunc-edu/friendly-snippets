@@ -3,9 +3,9 @@
         "prefix": "varS",
         "body": [
         "variable \"${1:name}\" {",
-	    "\tdescription = \"${3:description}\"",
+	    "\tdescription = \"${2}\"",
 	    "\ttype        = \"string\"",
-	    "\tdefault     = \"${2:default}\"",
+	    "\tdefault     = \"${3}\"",
 	    "}"
         ],
         "description": "variable with type : string"
