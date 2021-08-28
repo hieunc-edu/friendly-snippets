@@ -1,11 +1,11 @@
 {
     "varString": {
-        "prefix": "varString",
+        "prefix": "varS",
         "body": [
         "variable \"${1:name}\" {",
-	    "\tdescription = \"\"",
+	    "\tdescription = \"${3:description}\"",
 	    "\ttype        = \"string\"",
-	    "\tdefault     = \"${2}\"",
+	    "\tdefault     = \"${2:default}\"",
 	    "}"
         ],
         "description": "variable with type : string"
