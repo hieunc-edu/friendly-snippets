@@ -33,6 +33,23 @@
         "language": "python",
         "path": "./snippets/python/tkinter.json"
       }
+    ],
+    "grammars": [
+      {
+        "language": "tf",
+        "scopeName": "source.tf",
+        "path": "./grammars/tf.json"
+      },
+      {
+        "language": "tfvars",
+        "scopeName": "source.tfvars",
+        "path": "./grammars/tfvars.json"
+      },
+      {
+        "language": "terragrunt",
+        "scopeName": "source.terragrunt",
+        "path": "./grammars/terragrunt.json"
+      }
     ]
   }
 }
