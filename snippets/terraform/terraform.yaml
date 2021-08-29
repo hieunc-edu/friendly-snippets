@@ -1,27 +1,37 @@
 Terraform:
-  scope: version.tf
+  scope: main.tf
   prefix: terraform
   description: Simple terraform block with required version.
   body: |
     terraform {
-      required_version = ">= 0.12"
+      required_version = ">= 0.15"
     }
+
 Required providers:
-  scope: provider.tf
+  scope: terraform.tf
   prefix: required-providers
   description: Required providers block.
   body: |
     required_providers {
       ${1|acme,akamai,alicloud,archive,arukas,auth0,avi,aviatrix,aws,azurerm,azuread,azurestack,vthunder,baiducloud,bitbucket,brightbox,clc,checkpoint,chef,cherryservers,circonus,ciscoasa,aci,cloudflare,cloudscale,cloudstack,cobbler,consul,datadog,digitalocean,dns,dnsimple,dme,docker,dome9,dyn,exoscale,external,bigip,fastly,flexibleengine,fortios,genymotion,github,gitlab,google,grafana,gridscale,hedvig,helm,heroku,hcloud,http,huaweicloud,huaweicloudstack,icinga2,ignition,incapsula,influxdb,infoblox,jdcloud,kubernetes,launchdarkly,librato,linode,local,logentries,logicmonitor,mailgun,metalcloud,mongodbatlas,mysql,ncloud,netlify,newrelic,nomad,ns1,null,nutanix,oneandone,okta,oktaasa,opennebula,openstack,opentelekomcloud,opsgenie,oci,oraclepaas,opc,ovh,packet,pagerduty,panos,postgresql,powerdns,profitbricks,pureport,rabbitmq,rancher,rancher2,random,rightscale,rundeck,runscope,scaleway,selectel,signalfx,skytap,softlayer,spotinst,stackpath,statuscake,sumologic,telefonicaopencloud,template,tencentcloud,terraform,tfe,time,tls,triton,turbot,ucloud,ultradns,vault,venafi,vmc,nsxt,vcd,vra7,vsphere,vultr,yandex|} = ">= ${2:version}"
     }
+
+Required version:
+  scope: terraform.tf
+  prefix: required-version
+  description: Required version block.
+  body: |
+    required_version = ">= 0.12"
+
 Backend configuration:
-  scope: backend.tf
+  scope: terraform.tf
   prefix: backend
   description: Backend configuration.
   body: |
     backend ${1|local,remote,artifactory,azurerm,consul,cos,etcd,etcdv3gcs,http,mantaoss,pg,s3swift,atlas|} {
       ${2|name,address,path,prefix,endpoints,url,scheme,username,password,token|} = "${3:value}"
     }
+
 Local values:
   scope: main.tf
   prefix: locals
@@ -30,6 +40,7 @@ Local values:
     locals {
       ${1:name} = ${2:value}
     }
+
 Variable:
   scope: main.tf
   prefix: variable
@@ -40,6 +51,7 @@ Variable:
       default     = ${3|"",0,false,true,{},[],null|}
       description = "${4:description}"
     }
+
 Output:
   scope: main.tf
   prefix: output
@@ -51,6 +63,7 @@ Output:
       description = "${4:description}"
       depends_on  = [${5}]
     }
+
 Module from local dir:
   scope: main.tf
   prefix: module-local
@@ -60,6 +73,7 @@ Module from local dir:
       source = "./modules/${1:name}"
       ${2:param}  = ${3:value}
     }
+
 Module from registry:
   scope: main.tf
   prefix: module-registry
@@ -70,15 +84,7 @@ Module from registry:
       version = "${4:version}"
       ${5:param}   = ${6:value}
     }
-Module from Beamin:
-  scope: main.tf
-  prefix: module-beamin
-  description: Includes child modules from Baeemin.
-  body: |
-    module ${1:name} {
-      source = "git::git@bitbucket.org:globalwoowa/tf_module.git//${2|aws,gcp,datadog,cloudposse,gruntwork-io}/${3:module}?ref=${4:version}"
-      ${5:param}   = ${6:value}
-    }
+
 # --- Provider: Archive
 
 Data archive file:
@@ -89,11 +95,13 @@ Data archive file:
     data archive_file ${1:name} {
       type        = "zip"
       output_path = "${path.module}/files/output.zip"
+
       source {
         content  = ${2|"",data.,local.,module.|}
         filename = "${3}"
       }
     }
+
 # --- Provider: External
 
 Data external:
@@ -103,10 +111,12 @@ Data external:
   body: |
     data external ${1:name} {
       program = ["${2:program}"]
+
       query = {
         ${3:param} = ${4:value}
       }
     }
+
 # --- Provider: HTTP
 
 Data http:
@@ -116,10 +126,12 @@ Data http:
   body: |
     data http ${1:name} {
       url = ${2|"https://","http://",var.,data.,local.,module.|}
+
       request_headers = {
         Accept = "application/json"
       }
     }
+
 # --- Provider: Terraform
 
 Data from remote terraform state:
@@ -129,10 +141,12 @@ Data from remote terraform state:
   body: |
     data terraform_remote_state ${1:name} {
       backend = "${2|local,remote,artifactory,azurerm,consul,cos,etcd,etcdv3,gcs,http,manta,oss,pg,s3,swift,atlas|}"
+
       config {
         ${2|name,address,path,prefix,endpoints,url,scheme,username,password,token|} = "${3:value}"
       }
     }
+
 # --- Provider: TLS
 
 Data TLS public key:
@@ -143,6 +157,7 @@ Data TLS public key:
     data tls_public_key ${1:name} {
       private_key_pem = ${2|"",var.,data.,local.,module.,tls_private_key.|}
     }
+
 Resource TLS private key:
   scope: main.tf
   prefix: resource-tls-private-key
@@ -153,6 +168,7 @@ Resource TLS private key:
       ecdsa_curve  = "P384"
       rsa_bits     = "4096"
     }
+
 Resource TLS self-signed key:
   scope: main.tf
   prefix: resource-tls-self-signed-key
@@ -161,21 +177,26 @@ Resource TLS self-signed key:
     resource tls_self_signed_cert ${1:name} {
       key_algorithm   = ${2|ECDSA,RSA|}
       private_key_pem = ${3|"",var.,data.,local.,module.,tls_private_key.|}
+
       subject {
         common_name  = "${4:CN}"
         organization = "${5:O}"
       }
+
       is_ca_certificate     = ${6|false,true|}
       validity_period_hours = 26280
+
       allowed_uses = [
         "key_encipherment",
         "digital_signature",
         "server_auth",
       ]
+
       dns_names    = []
       ip_addresses = []
       uris         = []
     }
+
 Resource TLS locally-signed key:
   scope: main.tf
   prefix: resource-tls-locally-signed-key
@@ -186,14 +207,17 @@ Resource TLS locally-signed key:
       ca_key_algorithm   = ${3|ECDSA,RSA|}
       ca_private_key_pem = ${4|"",var.,data.,local.,module.,tls_private_key.|}
       ca_cert_pem        = ${5|"",var.,data.,local.,module.,tls_private_key.|}
+
       is_ca_certificate     = ${6|false,true|}
       validity_period_hours = 26280
+
       allowed_uses = [
         "key_encipherment",
         "digital_signature",
         "server_auth",
       ]
     }
+
 Resource TLS cert request:
   scope: main.tf
   prefix: resource-tls-cert-request
@@ -203,14 +227,17 @@ Resource TLS cert request:
       key_algorithm   = ${2|ECDSA,RSA|}
       private_key_pem = ${3|"",var.,data.,local.,module.,tls_private_key.|}
       ca_cert_pem     = ${4|"",var.,data.,local.,module.,tls_private_key.|}
+
       subject {
         common_name  = "${5:CN}"
         organization = "${6:O}"
       }
+
       dns_names    = []
       ip_addresses = []
       uris         = []
     }
+
 # --- Provider: Local
 
 Data local file:
@@ -221,6 +248,7 @@ Data local file:
     data local_file ${1:name} {
       filename = "${path.module}/${2}"
     }
+
 Resource local file:
   scope: main.tf
   prefix: resource-local-file
@@ -232,6 +260,7 @@ Resource local file:
       file_permission      = 0777
       directory_permission = 0777
     }
+
 # --- Provider: Null
 
 Data null:
@@ -244,6 +273,7 @@ Data null:
         ${2:var} = ${3:value}
       }
     }
+
 Resource null:
   scope: main.tf
   prefix: resource-null
@@ -253,10 +283,12 @@ Resource null:
       triggers = {
         ${2:trigger} = ${3:value}
       }
+
       provisioner "local-exec" {
         command = "${4:command}"
       }
     }
+
 # --- Provider: Template
 
 Data template file:
@@ -266,10 +298,12 @@ Data template file:
   body: |
     data template_file ${1:name} {
       template = "${path.module}/templates/${2:templatefilename}"
+
       vars = {
         ${3:var} = ${4:value}
       }
     }
+
 Data template cloudinit:
   scope: main.tf
   prefix: data-template-cloudinit-config
@@ -278,12 +312,14 @@ Data template cloudinit:
     data template_cloudinit_config ${1:name} {
       gzip          = true
       base64_encode = true
+
       part {
         filename     = "${2:filename}"
         content_type = "text/cloud-config"
         content      = ${3|"",var.,data.,local.,module.,tls_private_key.|}
       }
     }
+
 Resource template dir:
   scope: main.tf
   prefix: resource-template-dir
@@ -292,10 +328,12 @@ Resource template dir:
     resource template_dir ${1:name} {
       source_dir      = ${2:sourcepath}
       destination_dir = ${3:destinationpath}
+
       vars = {
         ${4:var} = ${5:value}
       }
     }
+
 # --- Provider: Random
 
 Resource random id:
@@ -305,10 +343,12 @@ Resource random id:
   body: |
     resource random_id ${1:name} {
       byte_length = ${2:length}
+
       keepers = {
         ${3:id} = ${4:value}
       }
     }
+
 Resource random integer:
   scope: main.tf
   prefix: resource-random-integer
@@ -317,10 +357,12 @@ Resource random integer:
     resource random_integer ${1:name} {
       min = ${2|0,1|}
       max = ${3:maxvalue}
+
       keepers = {
         ${4:id} = ${5:value}
       }
     }
+
 Resource random string:
   scope: main.tf
   prefix: resource-random-string
@@ -332,10 +374,12 @@ Resource random string:
       lower   = ${4|true,false|}
       number  = ${5|true,false|}
       special = ${6|true,false|}
+
       keepers = {
         ${7:id} = ${8:value}
       }
     }
+
 Resource random password:
   scope: main.tf
   prefix: resource-random-password
@@ -347,10 +391,12 @@ Resource random password:
       lower   = ${4|true,false|}
       number  = ${5|true,false|}
       special = ${6|true,false|}
+
       keepers = {
         ${7:id} = ${8:value}
       }
     }
+
 Resource random pet:
   scope: main.tf
   prefix: resource-random-pet
@@ -360,10 +406,12 @@ Resource random pet:
       length    = ${2:length}
       prefix    = ""
       separator = ""
+
       keepers = {
         ${3:id} = ${4:value}
       }
     }
+
 Resource random shuffle:
   scope: main.tf
   prefix: resource-random-shuffle
@@ -371,10 +419,12 @@ Resource random shuffle:
   body: |
     resource random_shuffle ${1:name} {
       input = ${2|[],[""]|}
+
       keepers = {
         ${3:id} = ${4:value}
       }
     }
+
 Resource random uuid:
   scope: main.tf
   prefix: resource-random-uuid
@@ -385,6 +435,7 @@ Resource random uuid:
         ${2:id} = ${3:value}
       }
     }
+
 # --- Provider: Time
 
 Resource time offset:
@@ -396,8 +447,10 @@ Resource time offset:
       triggers = {
         ${2:id} = ${3:value}
       }
+
       ${4|offset_days,offset_hours,offset_minutes,offset_months,offset_seconds,offset_years|} = ${5:offset}
     }
+
 Resource time rotating:
   scope: main.tf
   prefix: resource-time-rotating
@@ -407,8 +460,10 @@ Resource time rotating:
       triggers = {
         ${2:id} = ${3:value}
       }
+
       ${4|rotation_days,rotation_hours,rotation_minutes,rotation_months,rotation_seconds,rotation_years|} = ${5:rotation}
     }
+
 Resource time static:
   scope: main.tf
   prefix: resource-time-static

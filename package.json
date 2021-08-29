@@ -50,6 +50,19 @@
         "scopeName": "source.terragrunt",
         "path": "./grammars/terragrunt.json"
       }
-    ]
+    ],
+    "scripts": {
+      "build": "npm run compile -s",
+      "compile-tf": "yq eval --prettyPrint -o=json grammars/tf.yaml > grammars/tf.json",
+      "compile-tfvars": "yq eval --prettyPrint -o=json grammars/tfvars.yaml > grammars/tfvars.json",
+      "compile-terragrunt": "yq eval --prettyPrint -o=json grammars/terragrunt.yaml > grammars/terragrunt.json",
+      "compile-snippets": "yq eval --prettyPrint -o=json snippets/tf.yaml > snippets/tf.json",
+      "compile": "npm run compile-tf && npm run compile-tfvars && npm run compile-terragrunt && npm run compile-snippets",
+      "preversion": "git add -A .",
+      "postversion": "npm run push -s",
+      "prepush": "git push",
+      "push": "git push --tags",
+      "version": "npm run build -s"
+    }
   }
 }
