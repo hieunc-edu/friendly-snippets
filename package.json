@@ -160,7 +160,7 @@
       },
       {
         "language": "terraform",
-        "path": "./snippets/terraform/terraform.yaml"
+        "path": "./snippets/terraform/terraform.json"
       },
       {
         "language": "javascriptreact",
