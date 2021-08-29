@@ -46,7 +46,7 @@ Variable:
   prefix: variable
   description: Input variable.
   body: |
-    variable ${1:name} {
+    variable "${1:name}" {
       type        = ${2|string,number,bool,map,list,list(string),tuple,object,any|}
       default     = ${3|"",0,false,true,{},[],null|}
       description = "${4:description}"
@@ -57,7 +57,7 @@ Output:
   prefix: output
   description: Output value.
   body: |
-    output ${1:name} {
+    output "${1:name}" {
       value       = ${2|"",data.,local.,module.|}
       sensitive   = ${3|true,false|}
       description = "${4:description}"
@@ -69,7 +69,7 @@ Module from local dir:
   prefix: module-local
   description: Child module configuration block placed in local `modules` directory.
   body: |
-    module ${1:name} {
+    module "${1:name}" {
       source = "./modules/${1:name}"
       ${2:param}  = ${3:value}
     }
@@ -79,7 +79,7 @@ Module from registry:
   prefix: module-registry
   description: Includes child module from Terraform registry.
   body: |
-    module ${1:name} {
+    module "${1:name}" {
       source  = "${2:owner}/${1:name}/${3|acme,akamai,alicloud,archive,arukas,auth0,avi,aviatrix,aws,azurerm,azuread,azurestack,vthunder,baiducloud,bitbucket,brightbox,clc,checkpoint,chef,cherryservers,circonus,ciscoasa,aci,cloudflare,cloudscale,cloudstack,cobbler,consul,datadog,digitalocean,dns,dnsimple,dme,docker,dome9,dyn,exoscale,external,bigip,fastly,flexibleengine,fortios,genymotion,github,gitlab,google,grafana,gridscale,hedvig,helm,heroku,hcloud,http,huaweicloud,huaweicloudstack,icinga2,ignition,incapsula,influxdb,infoblox,jdcloud,kubernetes,launchdarkly,librato,linode,local,logentries,logicmonitor,mailgun,metalcloud,mongodbatlas,mysql,ncloud,netlify,newrelic,nomad,ns1,null,nutanix,oneandone,okta,oktaasa,opennebula,openstack,opentelekomcloud,opsgenie,oci,oraclepaas,opc,ovh,packet,pagerduty,panos,postgresql,powerdns,profitbricks,pureport,rabbitmq,rancher,rancher2,random,rightscale,rundeck,runscope,scaleway,selectel,signalfx,skytap,softlayer,spotinst,stackpath,statuscake,sumologic,telefonicaopencloud,template,tencentcloud,terraform,tfe,time,tls,triton,turbot,ucloud,ultradns,vault,venafi,vmc,nsxt,vcd,vra7,vsphere,vultr,yandex|}"
       version = "${4:version}"
       ${5:param}   = ${6:value}
@@ -92,7 +92,7 @@ Data archive file:
   prefix: data-archive-file
   description: Generates an archive from content, a file, or directory of files.
   body: |
-    data archive_file ${1:name} {
+    data archive_file "${1:name}" {
       type        = "zip"
       output_path = "${path.module}/files/output.zip"
 
@@ -109,7 +109,7 @@ Data external:
   prefix: data-external
   description: The `external` data source allows an external program implementing a specific protocol (defined below) to act as a data source, exposing arbitrary data for use elsewhere in the Terraform configuration.
   body: |
-    data external ${1:name} {
+    data external "${1:name}" {
       program = ["${2:program}"]
 
       query = {
@@ -124,7 +124,7 @@ Data http:
   prefix: data-http
   description: The `http` data source makes an HTTP GET request to the given URL and exports information about the response.
   body: |
-    data http ${1:name} {
+    data http "${1:name}" {
       url = ${2|"https://","http://",var.,data.,local.,module.|}
 
       request_headers = {
@@ -139,7 +139,7 @@ Data from remote terraform state:
   prefix: data-terraform-remote-state
   description: The terraform provider provides access to outputs from the Terraform state of shared infrastructure.
   body: |
-    data terraform_remote_state ${1:name} {
+    data terraform_remote_state "${1:name}" {
       backend = "${2|local,remote,artifactory,azurerm,consul,cos,etcd,etcdv3,gcs,http,manta,oss,pg,s3,swift,atlas|}"
 
       config {
@@ -154,7 +154,7 @@ Data TLS public key:
   prefix: data-tls-public-key
   description: Use this data source to get the public key from a PEM-encoded private key for use in other resources.
   body: |
-    data tls_public_key ${1:name} {
+    data tls_public_key "${1:name}" {
       private_key_pem = ${2|"",var.,data.,local.,module.,tls_private_key.|}
     }
 
@@ -163,7 +163,7 @@ Resource TLS private key:
   prefix: resource-tls-private-key
   description: Generates a secure private key and encodes it as PEM. This resource is primarily intended for easily bootstrapping throwaway development environments.
   body: |
-    resource tls_private_key ${1:name} {
+    resource tls_private_key "${1:name}" {
       algorithm    = ${2|ECDSA,RSA|}
       ecdsa_curve  = "P384"
       rsa_bits     = "4096"
@@ -174,7 +174,7 @@ Resource TLS self-signed key:
   prefix: resource-tls-self-signed-key
   description: Generates a self-signed TLS certificate in PEM format, which is the typical format used to configure TLS server software.
   body: |
-    resource tls_self_signed_cert ${1:name} {
+    resource tls_self_signed_cert "${1:name}" {
       key_algorithm   = ${2|ECDSA,RSA|}
       private_key_pem = ${3|"",var.,data.,local.,module.,tls_private_key.|}
 
@@ -202,7 +202,7 @@ Resource TLS locally-signed key:
   prefix: resource-tls-locally-signed-key
   description: Generates a TLS certificate using a Certificate Signing Request (CSR) and signs it with a provided certificate authority (CA) private key.
   body: |
-    resource tls_locally_signed_cert ${1:name} {
+    resource tls_locally_signed_cert "${1:name}" {
       cert_request_pem   = ${2|"",var.,data.,local.,module.,tls_private_key.|}
       ca_key_algorithm   = ${3|ECDSA,RSA|}
       ca_private_key_pem = ${4|"",var.,data.,local.,module.,tls_private_key.|}
@@ -223,7 +223,7 @@ Resource TLS cert request:
   prefix: resource-tls-cert-request
   description: Generates a Certificate Signing Request (CSR) in PEM format, which is the typical format used to request a certificate from a certificate authority.
   body: |
-    resource tls_cert_request ${1:name} {
+    resource tls_cert_request "${1:name}" {
       key_algorithm   = ${2|ECDSA,RSA|}
       private_key_pem = ${3|"",var.,data.,local.,module.,tls_private_key.|}
       ca_cert_pem     = ${4|"",var.,data.,local.,module.,tls_private_key.|}
@@ -245,7 +245,7 @@ Data local file:
   prefix: data-local-file
   description: Datasource `local_file` reads a file from the local filesystem.
   body: |
-    data local_file ${1:name} {
+    data local_file "${1:name}" {
       filename = "${path.module}/${2}"
     }
 
@@ -254,7 +254,7 @@ Resource local file:
   prefix: resource-local-file
   description: Generates a local file with the given content.
   body: |
-    resource local_file ${1:name} {
+    resource local_file "${1:name}" {
       ${2|sensitive_content,content,content_base64|} = ${3|"",var.,data.,local.,module.,tls_private_key.|}
       filename             = "${path.module}/files/${4:outputfile}"
       file_permission      = 0777
@@ -268,7 +268,7 @@ Data null:
   prefix: data-null
   description: The `null_data_source` data source implements the standard data source lifecycle but does not interact with any external APIs.
   body: |
-    data null_data_source ${1:name} {
+    data null_data_source "${1:name}" {
       inputs = {
         ${2:var} = ${3:value}
       }
@@ -279,7 +279,7 @@ Resource null:
   prefix: resource-null
   description: The `null_resource` resource implements the standard resource lifecycle but takes no further action.
   body: |
-    resource null_resource ${1:name} {
+    resource null_resource "${1:name}" {
       triggers = {
         ${2:trigger} = ${3:value}
       }
@@ -296,7 +296,7 @@ Data template file:
   prefix: data-template-file
   description: The `template_file` data source renders a template from a template string, which is usually loaded from an external file.
   body: |
-    data template_file ${1:name} {
+    data template_file "${1:name}" {
       template = "${path.module}/templates/${2:templatefilename}"
 
       vars = {
@@ -309,7 +309,7 @@ Data template cloudinit:
   prefix: data-template-cloudinit-config
   description: Renders a multipart MIME configuration for use with cloud-init.
   body: |
-    data template_cloudinit_config ${1:name} {
+    data template_cloudinit_config "${1:name}" {
       gzip          = true
       base64_encode = true
 
@@ -325,7 +325,7 @@ Resource template dir:
   prefix: resource-template-dir
   description: Renders a directory containing templates into a separate directory of corresponding rendered files.
   body: |
-    resource template_dir ${1:name} {
+    resource template_dir "${1:name}" {
       source_dir      = ${2:sourcepath}
       destination_dir = ${3:destinationpath}
 
@@ -341,7 +341,7 @@ Resource random id:
   prefix: resource-random-id
   description: The resource `random_id` generates random numbers that are intended to be used as unique identifiers for other resources.
   body: |
-    resource random_id ${1:name} {
+    resource random_id "${1:name}" {
       byte_length = ${2:length}
 
       keepers = {
@@ -354,7 +354,7 @@ Resource random integer:
   prefix: resource-random-integer
   description: The resource `random_integer` generates random values from a given range, described by the min and max attributes of a given resource.
   body: |
-    resource random_integer ${1:name} {
+    resource random_integer "${1:name}" {
       min = ${2|0,1|}
       max = ${3:maxvalue}
 
@@ -368,7 +368,7 @@ Resource random string:
   prefix: resource-random-string
   description: The resource `random_string` generates a random permutation of alphanumeric characters and optionally special characters.
   body: |
-    resource random_string ${1:name} {
+    resource random_string "${1:name}" {
       length  = ${2:length}
       upper   = ${3|true,false|}
       lower   = ${4|true,false|}
@@ -385,7 +385,7 @@ Resource random password:
   prefix: resource-random-password
   description: Identical to `random_string` with the exception that the result is treated as sensitive and, thus, not displayed in console output.
   body: |
-    resource random_password ${1:name} {
+    resource random_password "${1:name}" {
       length  = ${2:length}
       upper   = ${3|true,false|}
       lower   = ${4|true,false|}
@@ -402,7 +402,7 @@ Resource random pet:
   prefix: resource-random-pet
   description: The resource `random_pet` generates random pet names that are intended to be used as unique identifiers for other resources.
   body: |
-    resource random_pet ${1:name} {
+    resource random_pet "${1:name}" {
       length    = ${2:length}
       prefix    = ""
       separator = ""
@@ -417,7 +417,7 @@ Resource random shuffle:
   prefix: resource-random-shuffle
   description: The resource `random_shuffle` generates a random permutation of a list of strings given as an argument.
   body: |
-    resource random_shuffle ${1:name} {
+    resource random_shuffle "${1:name}" {
       input = ${2|[],[""]|}
 
       keepers = {
@@ -430,7 +430,7 @@ Resource random uuid:
   prefix: resource-random-uuid
   description: The resource `random_uuid` generates random uuid string that is intended to be used as unique identifiers for other resources.
   body: |
-    resource random_uuid ${1:name} {
+    resource random_uuid "${1:name}" {
       keepers = {
         ${2:id} = ${3:value}
       }
@@ -443,7 +443,7 @@ Resource time offset:
   prefix: resource-time-offset
   description: Manages an offset time resource, which keeps an UTC timestamp stored in the Terraform state that is offset from a locally sourced base timestamp.
   body: |
-    resource time_offset ${1:name} {
+    resource time_offset "${1:name}" {
       triggers = {
         ${2:id} = ${3:value}
       }
@@ -456,7 +456,7 @@ Resource time rotating:
   prefix: resource-time-rotating
   description: Manages a rotating time resource, which keeps a rotating UTC timestamp stored in the Terraform state and proposes resource recreation when the locally sourced current time is beyond the rotation time.
   body: |
-    resource time_rotating ${1:name} {
+    resource time_rotating "${1:name}" {
       triggers = {
         ${2:id} = ${3:value}
       }
@@ -469,7 +469,7 @@ Resource time static:
   prefix: resource-time-static
   description: Manages a static time resource, which keeps a locally sourced UTC timestamp stored in the Terraform state.
   body: |
-    resource time_static ${1:name} {
+    resource time_static "${1:name}" {
       triggers = {
         ${2:id} = ${3:value}
       }
