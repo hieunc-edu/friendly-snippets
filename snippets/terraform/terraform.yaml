@@ -1,5 +1,5 @@
 Terraform:
-  scope: source.tf
+  scope: version.tf
   prefix: terraform
   description: Simple terraform block with required version.
   body: |
@@ -7,21 +7,15 @@ Terraform:
       required_version = ">= 0.12"
     }
 Required providers:
-  scope: meta.terraform.tf
+  scope: provider.tf
   prefix: required-providers
   description: Required providers block.
   body: |
     required_providers {
       ${1|acme,akamai,alicloud,archive,arukas,auth0,avi,aviatrix,aws,azurerm,azuread,azurestack,vthunder,baiducloud,bitbucket,brightbox,clc,checkpoint,chef,cherryservers,circonus,ciscoasa,aci,cloudflare,cloudscale,cloudstack,cobbler,consul,datadog,digitalocean,dns,dnsimple,dme,docker,dome9,dyn,exoscale,external,bigip,fastly,flexibleengine,fortios,genymotion,github,gitlab,google,grafana,gridscale,hedvig,helm,heroku,hcloud,http,huaweicloud,huaweicloudstack,icinga2,ignition,incapsula,influxdb,infoblox,jdcloud,kubernetes,launchdarkly,librato,linode,local,logentries,logicmonitor,mailgun,metalcloud,mongodbatlas,mysql,ncloud,netlify,newrelic,nomad,ns1,null,nutanix,oneandone,okta,oktaasa,opennebula,openstack,opentelekomcloud,opsgenie,oci,oraclepaas,opc,ovh,packet,pagerduty,panos,postgresql,powerdns,profitbricks,pureport,rabbitmq,rancher,rancher2,random,rightscale,rundeck,runscope,scaleway,selectel,signalfx,skytap,softlayer,spotinst,stackpath,statuscake,sumologic,telefonicaopencloud,template,tencentcloud,terraform,tfe,time,tls,triton,turbot,ucloud,ultradns,vault,venafi,vmc,nsxt,vcd,vra7,vsphere,vultr,yandex|} = ">= ${2:version}"
     }
-Required version:
-  scope: meta.terraform.tf
-  prefix: required-version
-  description: Required version block.
-  body: |
-    required_version = ">= 0.12"
 Backend configuration:
-  scope: meta.terraform.tf
+  scope: backend.tf
   prefix: backend
   description: Backend configuration.
   body: |
@@ -29,7 +23,7 @@ Backend configuration:
       ${2|name,address,path,prefix,endpoints,url,scheme,username,password,token|} = "${3:value}"
     }
 Local values:
-  scope: source.tf
+  scope: main.tf
   prefix: locals
   description: A set of related local values.
   body: |
@@ -37,7 +31,7 @@ Local values:
       ${1:name} = ${2:value}
     }
 Variable:
-  scope: source.tf
+  scope: main.tf
   prefix: variable
   description: Input variable.
   body: |
@@ -47,7 +41,7 @@ Variable:
       description = "${4:description}"
     }
 Output:
-  scope: source.tf
+  scope: main.tf
   prefix: output
   description: Output value.
   body: |
@@ -58,7 +52,7 @@ Output:
       depends_on  = [${5}]
     }
 Module from local dir:
-  scope: source.tf
+  scope: main.tf
   prefix: module-local
   description: Child module configuration block placed in local `modules` directory.
   body: |
@@ -67,7 +61,7 @@ Module from local dir:
       ${2:param}  = ${3:value}
     }
 Module from registry:
-  scope: source.tf
+  scope: main.tf
   prefix: module-registry
   description: Includes child module from Terraform registry.
   body: |
@@ -76,10 +70,19 @@ Module from registry:
       version = "${4:version}"
       ${5:param}   = ${6:value}
     }
+Module from Beamin:
+  scope: main.tf
+  prefix: module-beamin
+  description: Includes child modules from Baeemin.
+  body: |
+    module ${1:name} {
+      source = "git::git@bitbucket.org:globalwoowa/tf_module.git//${2|aws,gcp,datadog,cloudposse,gruntwork-io}/${3:module}?ref=${4:version}"
+      ${5:param}   = ${6:value}
+    }
 # --- Provider: Archive
 
 Data archive file:
-  scope: source.tf
+  scope: main.tf
   prefix: data-archive-file
   description: Generates an archive from content, a file, or directory of files.
   body: |
@@ -94,7 +97,7 @@ Data archive file:
 # --- Provider: External
 
 Data external:
-  scope: source.tf
+  scope: main.tf
   prefix: data-external
   description: The `external` data source allows an external program implementing a specific protocol (defined below) to act as a data source, exposing arbitrary data for use elsewhere in the Terraform configuration.
   body: |
@@ -107,7 +110,7 @@ Data external:
 # --- Provider: HTTP
 
 Data http:
-  scope: source.tf
+  scope: main.tf
   prefix: data-http
   description: The `http` data source makes an HTTP GET request to the given URL and exports information about the response.
   body: |
@@ -120,7 +123,7 @@ Data http:
 # --- Provider: Terraform
 
 Data from remote terraform state:
-  scope: source.tf
+  scope: main.tf
   prefix: data-terraform-remote-state
   description: The terraform provider provides access to outputs from the Terraform state of shared infrastructure.
   body: |
@@ -133,7 +136,7 @@ Data from remote terraform state:
 # --- Provider: TLS
 
 Data TLS public key:
-  scope: source.tf
+  scope: main.tf
   prefix: data-tls-public-key
   description: Use this data source to get the public key from a PEM-encoded private key for use in other resources.
   body: |
@@ -141,7 +144,7 @@ Data TLS public key:
       private_key_pem = ${2|"",var.,data.,local.,module.,tls_private_key.|}
     }
 Resource TLS private key:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-tls-private-key
   description: Generates a secure private key and encodes it as PEM. This resource is primarily intended for easily bootstrapping throwaway development environments.
   body: |
@@ -151,7 +154,7 @@ Resource TLS private key:
       rsa_bits     = "4096"
     }
 Resource TLS self-signed key:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-tls-self-signed-key
   description: Generates a self-signed TLS certificate in PEM format, which is the typical format used to configure TLS server software.
   body: |
@@ -174,7 +177,7 @@ Resource TLS self-signed key:
       uris         = []
     }
 Resource TLS locally-signed key:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-tls-locally-signed-key
   description: Generates a TLS certificate using a Certificate Signing Request (CSR) and signs it with a provided certificate authority (CA) private key.
   body: |
@@ -192,7 +195,7 @@ Resource TLS locally-signed key:
       ]
     }
 Resource TLS cert request:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-tls-cert-request
   description: Generates a Certificate Signing Request (CSR) in PEM format, which is the typical format used to request a certificate from a certificate authority.
   body: |
@@ -211,7 +214,7 @@ Resource TLS cert request:
 # --- Provider: Local
 
 Data local file:
-  scope: source.tf
+  scope: main.tf
   prefix: data-local-file
   description: Datasource `local_file` reads a file from the local filesystem.
   body: |
@@ -219,7 +222,7 @@ Data local file:
       filename = "${path.module}/${2}"
     }
 Resource local file:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-local-file
   description: Generates a local file with the given content.
   body: |
@@ -232,7 +235,7 @@ Resource local file:
 # --- Provider: Null
 
 Data null:
-  scope: source.tf
+  scope: main.tf
   prefix: data-null
   description: The `null_data_source` data source implements the standard data source lifecycle but does not interact with any external APIs.
   body: |
@@ -242,7 +245,7 @@ Data null:
       }
     }
 Resource null:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-null
   description: The `null_resource` resource implements the standard resource lifecycle but takes no further action.
   body: |
@@ -257,7 +260,7 @@ Resource null:
 # --- Provider: Template
 
 Data template file:
-  scope: source.tf
+  scope: main.tf
   prefix: data-template-file
   description: The `template_file` data source renders a template from a template string, which is usually loaded from an external file.
   body: |
@@ -268,7 +271,7 @@ Data template file:
       }
     }
 Data template cloudinit:
-  scope: source.tf
+  scope: main.tf
   prefix: data-template-cloudinit-config
   description: Renders a multipart MIME configuration for use with cloud-init.
   body: |
@@ -282,7 +285,7 @@ Data template cloudinit:
       }
     }
 Resource template dir:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-template-dir
   description: Renders a directory containing templates into a separate directory of corresponding rendered files.
   body: |
@@ -296,7 +299,7 @@ Resource template dir:
 # --- Provider: Random
 
 Resource random id:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-random-id
   description: The resource `random_id` generates random numbers that are intended to be used as unique identifiers for other resources.
   body: |
@@ -307,7 +310,7 @@ Resource random id:
       }
     }
 Resource random integer:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-random-integer
   description: The resource `random_integer` generates random values from a given range, described by the min and max attributes of a given resource.
   body: |
@@ -319,7 +322,7 @@ Resource random integer:
       }
     }
 Resource random string:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-random-string
   description: The resource `random_string` generates a random permutation of alphanumeric characters and optionally special characters.
   body: |
@@ -334,7 +337,7 @@ Resource random string:
       }
     }
 Resource random password:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-random-password
   description: Identical to `random_string` with the exception that the result is treated as sensitive and, thus, not displayed in console output.
   body: |
@@ -349,7 +352,7 @@ Resource random password:
       }
     }
 Resource random pet:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-random-pet
   description: The resource `random_pet` generates random pet names that are intended to be used as unique identifiers for other resources.
   body: |
@@ -362,7 +365,7 @@ Resource random pet:
       }
     }
 Resource random shuffle:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-random-shuffle
   description: The resource `random_shuffle` generates a random permutation of a list of strings given as an argument.
   body: |
@@ -373,7 +376,7 @@ Resource random shuffle:
       }
     }
 Resource random uuid:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-random-uuid
   description: The resource `random_uuid` generates random uuid string that is intended to be used as unique identifiers for other resources.
   body: |
@@ -385,7 +388,7 @@ Resource random uuid:
 # --- Provider: Time
 
 Resource time offset:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-time-offset
   description: Manages an offset time resource, which keeps an UTC timestamp stored in the Terraform state that is offset from a locally sourced base timestamp.
   body: |
@@ -396,7 +399,7 @@ Resource time offset:
       ${4|offset_days,offset_hours,offset_minutes,offset_months,offset_seconds,offset_years|} = ${5:offset}
     }
 Resource time rotating:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-time-rotating
   description: Manages a rotating time resource, which keeps a rotating UTC timestamp stored in the Terraform state and proposes resource recreation when the locally sourced current time is beyond the rotation time.
   body: |
@@ -407,7 +410,7 @@ Resource time rotating:
       ${4|rotation_days,rotation_hours,rotation_minutes,rotation_months,rotation_seconds,rotation_years|} = ${5:rotation}
     }
 Resource time static:
-  scope: source.tf
+  scope: main.tf
   prefix: resource-time-static
   description: Manages a static time resource, which keeps a locally sourced UTC timestamp stored in the Terraform state.
   body: |

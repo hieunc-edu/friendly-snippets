@@ -156,10 +156,6 @@
       },
       {
         "language": "terraform",
-        "path": "./snippets/terraform/base.json"
-      },
-      {
-        "language": "terraform",
         "path": "./snippets/terraform/terraform.json"
       },
       {
