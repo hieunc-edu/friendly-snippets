@@ -1,5 +1,5 @@
 {
-  "name": "terraform-snippets",
+  "name": "snippets",
   "engines": {
     "vscode": "^1.11.0"
   },
@@ -36,18 +36,15 @@
     ],
     "grammars": [
       {
-        "language": "tf",
-        "scopeName": "source.tf",
+        "language": "terraform",
         "path": "./grammars/tf.json"
       },
       {
         "language": "tfvars",
-        "scopeName": "source.tfvars",
         "path": "./grammars/tfvars.json"
       },
       {
         "language": "terragrunt",
-        "scopeName": "source.terragrunt",
         "path": "./grammars/terragrunt.json"
       }
     ],
