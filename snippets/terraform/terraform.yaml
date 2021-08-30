@@ -85,6 +85,17 @@ Module from registry:
       ${5:param}   = ${6:value}
     }
 
+Module from Baemin:
+  scope: main.tf
+  prefix: module-Baemin
+  description: Includes child module from Terraform registry.
+  body: |
+    module "${1:name}" {
+      source  = "git::git@bitbucket.org:globalwoowa/${2|tf_modules,tf_stack}.git//${3|aws,gcp}/${4:module}?ref=${5:version}"
+      ${6:param}   = ${7:value}
+    }
+
+
 # --- Provider: Archive
 
 Data archive file:
