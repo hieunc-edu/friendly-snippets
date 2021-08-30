@@ -57,7 +57,7 @@
     "scope": "main.tf",
     "prefix": "module-Baemin",
     "description": "Includes child module from Terraform registry.",
-    "body": "module \"${1:name}\" {\n  source  = \"git::git@bitbucket.org:globalwoowa/${2|tf_modules,tf_stack}.git//${3|aws,gcp}/${4:module}?ref=${5:version}\"\n  ${6:param}   = ${7:value}\n}\n"
+    "body": "module \"${1:name}\" {\n  source  = \"git::git@bitbucket.org:globalwoowa/${2|tf_modules,tf_stack|}.git//${3|aws,gcp,datadog|}/${4:module}?ref=${5:version}\"\n  ${6:param}   = ${7:value}\n}\n"
   },
   "Data archive file": {
     "scope": "main.tf",
