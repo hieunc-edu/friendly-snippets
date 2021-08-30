@@ -53,6 +53,12 @@
     "description": "Includes child module from Terraform registry.",
     "body": "module \"${1:name}\" {\n  source  = \"${2:owner}/${1:name}/${3|acme,akamai,alicloud,archive,arukas,auth0,avi,aviatrix,aws,azurerm,azuread,azurestack,vthunder,baiducloud,bitbucket,brightbox,clc,checkpoint,chef,cherryservers,circonus,ciscoasa,aci,cloudflare,cloudscale,cloudstack,cobbler,consul,datadog,digitalocean,dns,dnsimple,dme,docker,dome9,dyn,exoscale,external,bigip,fastly,flexibleengine,fortios,genymotion,github,gitlab,google,grafana,gridscale,hedvig,helm,heroku,hcloud,http,huaweicloud,huaweicloudstack,icinga2,ignition,incapsula,influxdb,infoblox,jdcloud,kubernetes,launchdarkly,librato,linode,local,logentries,logicmonitor,mailgun,metalcloud,mongodbatlas,mysql,ncloud,netlify,newrelic,nomad,ns1,null,nutanix,oneandone,okta,oktaasa,opennebula,openstack,opentelekomcloud,opsgenie,oci,oraclepaas,opc,ovh,packet,pagerduty,panos,postgresql,powerdns,profitbricks,pureport,rabbitmq,rancher,rancher2,random,rightscale,rundeck,runscope,scaleway,selectel,signalfx,skytap,softlayer,spotinst,stackpath,statuscake,sumologic,telefonicaopencloud,template,tencentcloud,terraform,tfe,time,tls,triton,turbot,ucloud,ultradns,vault,venafi,vmc,nsxt,vcd,vra7,vsphere,vultr,yandex|}\"\n  version = \"${4:version}\"\n  ${5:param}   = ${6:value}\n}\n"
   },
+  "Module from Baemin": {
+    "scope": "main.tf",
+    "prefix": "module-Baemin",
+    "description": "Includes child module from Terraform registry.",
+    "body": "module \"${1:name}\" {\n  source  = \"git::git@bitbucket.org:globalwoowa/${2|tf_modules,tf_stack}.git//${3|aws,gcp}/${4:module}?ref=${5:version}\"\n  ${6:param}   = ${7:value}\n}\n"
+  },
   "Data archive file": {
     "scope": "main.tf",
     "prefix": "data-archive-file",
